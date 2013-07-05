@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Utility functions used by UpgradeConcierge
+ * Utility functions used by UpgradeFirstAid
  */
 class UpgradeFirstAidUtil {
 
