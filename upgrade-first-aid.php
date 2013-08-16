@@ -13,6 +13,7 @@ Text Domain: upgrade_first_aid
 
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once dirname( __FILE__ ) . '/UpgradeFirstAidUtil.inc';
+define( 'UPGRADE_FIRST_AID_DISK_FREE_THRESHOLD', 1024 * 10 );
 
 add_action( 'admin_menu', array( 'UpgradeFirstAid', 'admin_menu' ) );
 add_action( 'admin_init', array( 'UpgradeFirstAid', 'admin_init' ) );
@@ -56,12 +57,14 @@ class UpgradeFirstAid {
 		$type = get_filesystem_method( array(), ABSPATH );
 		$method = UpgradeFirstAidUtil::upgrade_method_description( $type );
 		echo '<p>' . UpgradeFirstAidUtil::type_icon( $type ) . ' ' . sprintf( 'WordPress can install core upgrades %s.', $method ) . '</p>';
+		self::maybe_disk_full( ABSPATH );
 		self::maybe_ownership_mismatch( ABSPATH . 'index.php' );
 
 		echo '<h3>' . __( 'Plugin Upgrades' , 'upgrade_first_aid' ) . '</h3>';
 		$type = get_filesystem_method( array(), WP_PLUGIN_DIR );
 		$method = UpgradeFirstAidUtil::upgrade_method_description( $type );
 		echo '<p>' . UpgradeFirstAidUtil::type_icon( $type ) . sprintf( 'WordPress can install plugins %s.', $method ) . '</p>';
+		self::maybe_disk_full( WP_PLUGIN_DIR );
 		self::maybe_ownership_mismatch( WP_PLUGIN_DIR );
 
 		$all_plugins = get_plugins();
@@ -77,6 +80,7 @@ class UpgradeFirstAid {
 		$type = get_filesystem_method( array(), get_theme_root() );
 		$method = UpgradeFirstAidUtil::upgrade_method_description( $type );
 		echo '<p>' . UpgradeFirstAidUtil::type_icon( $type ) . sprintf( 'WordPress can install themes %s.', $method ) . '</p>';
+		self::maybe_disk_full( get_theme_root() );
 		self::maybe_ownership_mismatch( get_theme_root() );
 
 		set_error_handler( array( __CLASS__, 'error_handler' ), E_ALL );
@@ -116,6 +120,19 @@ class UpgradeFirstAid {
 			if ( UpgradeFirstAidUtil::can_write_to_directory( $directory ) && !defined( 'FS_METHOD' ) ) {
 				echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/comment-grey-bubble.png' ) ) . sprintf( __( "<em>%s</em> can write to the %s directory, so you can try adding <code>%s</code> to your wp-config.php file which might allow upgrades without FTP.", 'upgrade_first_aid' ), $php_user, $directory, "define('FS_METHOD', 'direct');" ) . '</p>';
 			}
+		}
+	}
+
+	/**
+	 * Display an error if the disk is low on free space
+	 *
+	 * @author Dave Ross <dave@davidmichaelross.com>
+	 * @param  string $context directory whose partition should be checked
+	 */
+	private static function maybe_disk_full( $context ) {
+		$free_space = disk_free_space( $context );
+		if ( UPGRADE_FIRST_AID_DISK_FREE_THRESHOLD >= $free_space ) {
+			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "The disk or partition where %s is located is dangerously low on free space." ), $context ) . '</p>';
 		}
 	}
 
