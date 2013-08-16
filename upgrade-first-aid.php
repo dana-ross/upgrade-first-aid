@@ -101,7 +101,7 @@ class UpgradeFirstAid {
 
 	private static function maybe_ownership_mismatch( $context, $item = "WordPress" ) {
 		$php_user = UpgradeFirstAidUtil::current_php_user();
-		$wp_filesystem_direct = new WP_Filesystem_Direct(null);
+		$wp_filesystem_direct = new WP_Filesystem_Direct( null );
 		$wp_owner = $wp_filesystem_direct->owner( $context );
 
 		if ( preg_match( '/index.php$/', $context ) ) {
@@ -128,6 +128,6 @@ class UpgradeFirstAid {
 	public static function error_handler( $errno , $errstr,  $errfile , $errline ,  $errcontext ) {
 		print "$errno $errstr $errfile $errline";
 		print "<hr>";
-		print_r($errcontext);
+		print_r( $errcontext );
 	}
 }
