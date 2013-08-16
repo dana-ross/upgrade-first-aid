@@ -7,6 +7,7 @@ class UpgradeFirstAidUtil {
 
 	/**
 	 * Get the user currently running this PHP code.
+	 *
 	 * @return string
 	 */
 	public static function current_php_user() {
@@ -28,7 +29,8 @@ class UpgradeFirstAidUtil {
 
 	/**
 	 * Render an icon for display next to a note about WordPress's chosen upgrade method (direct, ftpext, etc.)
-	 * @param string $type upgrade method
+	 *
+	 * @param string  $type upgrade method
 	 * @return string img tag
 	 */
 	public static function type_icon( $type ) {
@@ -43,8 +45,9 @@ class UpgradeFirstAidUtil {
 
 	/**
 	 * Render an HTML img tag
-	 * @param string $url
-	 * @param string alt
+	 *
+	 * @param string  $url
+	 * @param string  alt
 	 * @return string
 	 */
 	public static function img_tag( $url, $alt = "" ) {
@@ -53,17 +56,18 @@ class UpgradeFirstAidUtil {
 
 	/**
 	 * Test if the user running PHP can write to a given directory
-	 * @param string $directory
+	 *
+	 * @param string  $directory
 	 * @return boolean
 	 */
-	public static function can_write_to_directory($directory) {
+	public static function can_write_to_directory( $directory ) {
 		$can_write = false;
-		$temp_file_name = trailingslashit($directory) . 'temp-write-test-' . time();
-		$temp_handle = @fopen($temp_file_name, 'w');
+		$temp_file_name = trailingslashit( $directory ) . 'temp-write-test-' . time();
+		$temp_handle = @fopen( $temp_file_name, 'w' );
 		if ( $temp_handle ) {
 			$can_write = true;
-			@fclose($temp_handle);
-			@unlink($temp_file_name);
+			@fclose( $temp_handle );
+			@unlink( $temp_file_name );
 		}
 
 		return $can_write;
@@ -71,14 +75,14 @@ class UpgradeFirstAidUtil {
 
 	public static function upgrade_method_description( $type ) {
 		switch ( $type ) {
-			case 'direct':
-				return __( 'automatically', 'upgrade_first_aid' );
-			case 'ftpext':
-				return __( "using PHP's FTP extension", 'upgrade_first_aid' );
-			case 'ssh':
-				return __( 'using SSH', 'upgrade_first_aid' );
-			case 'ftpsockets':
-				return __( 'using FTP over sockets', 'upgrade_first_aid' );
+		case 'direct':
+			return __( 'automatically', 'upgrade_first_aid' );
+		case 'ftpext':
+			return __( "using PHP's FTP extension", 'upgrade_first_aid' );
+		case 'ssh':
+			return __( 'using SSH', 'upgrade_first_aid' );
+		case 'ftpsockets':
+			return __( 'using FTP over sockets', 'upgrade_first_aid' );
 		}
 
 		// Fallthrough
