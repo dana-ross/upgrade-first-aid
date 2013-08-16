@@ -116,7 +116,7 @@ class UpgradeFirstAid {
 		}
 
 		if ( $php_user !== $wp_owner ) {
-			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "PHP is currently running as the user <em>%s</em>, but the %s files are owned by the user <em>%s</em>. WordPress could install upgrades without FTP if you changed the files' owner to <em>%s</em>." ), $php_user, $item, $wp_owner, $php_user ) . '</li>';
+			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "PHP is currently running as the user <em>%s</em>, but the %s files are owned by the user <em>%s</em>. WordPress could install upgrades without FTP if you changed the files' owner to <em>%s</em>." ), $php_user, $item, $wp_owner, $php_user ) . '</p>';
 			if ( UpgradeFirstAidUtil::can_write_to_directory( $directory ) && !defined( 'FS_METHOD' ) ) {
 				echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/comment-grey-bubble.png' ) ) . sprintf( __( "<em>%s</em> can write to the %s directory, so you can try adding <code>%s</code> to your wp-config.php file which might allow upgrades without FTP.", 'upgrade_first_aid' ), $php_user, $directory, "define('FS_METHOD', 'direct');" ) . '</p>';
 			}
