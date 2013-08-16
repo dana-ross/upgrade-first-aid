@@ -101,7 +101,8 @@ class UpgradeFirstAid {
 
 	private static function maybe_ownership_mismatch( $context, $item = "WordPress" ) {
 		$php_user = UpgradeFirstAidUtil::current_php_user();
-		$wp_owner = WP_Filesystem_Direct::owner( $context );
+		$wp_filesystem_direct = new WP_Filesystem_Direct(null);
+		$wp_owner = $wp_filesystem_direct->owner( $context );
 
 		if ( preg_match( '/index.php$/', $context ) ) {
 			$directory = dirname( $context );
