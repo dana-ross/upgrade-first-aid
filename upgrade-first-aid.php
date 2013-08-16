@@ -29,6 +29,7 @@ class UpgradeFirstAid {
 	}
 
 	public static function admin_init() {
+		load_plugin_textdomain( 'upgrade_first_aid', false, dirname( plugin_basename( __FILE__ ) ) . "/lang/" );
 		add_meta_box( 'upgrade_first_aid_resources', __( 'Resources', 'upgrade_first_aid' ), array( 'UpgradeFirstAid', 'meta_box_resources' ), 'upgrade_first_aid', 'normal', 'high' );
 	}
 
@@ -112,7 +113,7 @@ class UpgradeFirstAid {
 	 * Check for a possible file ownership mismatch and display an error
 	 *
 	 * @author Dave Ross <dave@davidmichaelross.com>
-	 * @param  string $context directory whose permissions should be checked
+	 * @param string  $context directory whose permissions should be checked
 	 */
 	private static function maybe_ownership_mismatch( $context, $item = "WordPress" ) {
 		$php_user = UpgradeFirstAidUtil::current_php_user();
@@ -127,7 +128,7 @@ class UpgradeFirstAid {
 		}
 
 		if ( $php_user !== $wp_owner ) {
-			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "PHP is currently running as the user <em>%s</em>, but the %s files are owned by the user <em>%s</em>. WordPress could install upgrades without FTP if you changed the files' owner to <em>%s</em>." ), $php_user, $item, $wp_owner, $php_user ) . '</p>';
+			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "PHP is currently running as the user <em>%s</em>, but the %s files are owned by the user <em>%s</em>. WordPress could install upgrades without FTP if you changed the files' owner to <em>%s</em>.", 'upgrade_first_aid' ), $php_user, $item, $wp_owner, $php_user ) . '</p>';
 			if ( UpgradeFirstAidUtil::can_write_to_directory( $directory ) && !defined( 'FS_METHOD' ) ) {
 				echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/comment-grey-bubble.png' ) ) . sprintf( __( "<em>%s</em> can write to the %s directory, so you can try adding <code>%s</code> to your wp-config.php file which might allow upgrades without FTP.", 'upgrade_first_aid' ), $php_user, $directory, "define('FS_METHOD', 'direct');" ) . '</p>';
 			}
@@ -138,12 +139,12 @@ class UpgradeFirstAid {
 	 * Display an error if the disk is low on free space
 	 *
 	 * @author Dave Ross <dave@davidmichaelross.com>
-	 * @param  string $context directory whose partition should be checked
+	 * @param string  $context directory whose partition should be checked
 	 */
 	private static function maybe_disk_full( $context ) {
 		$free_space = disk_free_space( $context );
 		if ( UPGRADE_FIRST_AID_DISK_FREE_THRESHOLD >= $free_space ) {
-			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "The disk or partition where %s is located is dangerously low on free space." ), $context ) . '</p>';
+			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "The disk or partition where %s is located is dangerously low on free space.", 'upgrade_first_aid' ), $context ) . '</p>';
 		}
 	}
 
