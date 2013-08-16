@@ -38,6 +38,11 @@ class UpgradeFirstAid {
 		wp_enqueue_script( 'jquery-ui-draggable' );
 	}
 
+	/**
+	 * Run tests and display status
+	 *
+	 * @author  Dave Ross <dave@davidmichaelross.com>
+	 */
 	public static function plugin_options() {
 
 		if ( !class_exists( 'WP_Filesystem_Direct' ) ) {
@@ -103,6 +108,12 @@ class UpgradeFirstAid {
 		echo '</div>';
 	}
 
+	/**
+	 * Check for a possible file ownership mismatch and display an error
+	 *
+	 * @author Dave Ross <dave@davidmichaelross.com>
+	 * @param  string $context directory whose permissions should be checked
+	 */
 	private static function maybe_ownership_mismatch( $context, $item = "WordPress" ) {
 		$php_user = UpgradeFirstAidUtil::current_php_user();
 		$wp_filesystem_direct = new WP_Filesystem_Direct( null );
