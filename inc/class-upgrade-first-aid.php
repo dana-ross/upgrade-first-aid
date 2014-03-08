@@ -158,8 +158,7 @@ class UpgradeFirstAid {
 	public static function error_handler( $errno, $errstr, $errfile, $errline, $errcontext ) {
 
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			print wp_kses( "$errno $errstr $errfile $errline", array() );
-			print '<hr>';
+			error_log( "$errno $errstr $errfile $errline" );
 		}
 
 	}
