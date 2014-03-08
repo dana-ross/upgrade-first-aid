@@ -53,7 +53,7 @@ class UpgradeFirstAidUtil {
 	 * @return string
 	 */
 	public static function img_tag( $url, $alt = "" ) {
-		return '<img src="' . $url . '" alt="' . esc_attr( $alt ) . '" /> ';
+		return '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( $alt ) . '" /> ';
 	}
 
 	/**
