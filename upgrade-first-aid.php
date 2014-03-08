@@ -160,7 +160,7 @@ class UpgradeFirstAid {
 
 	public static function meta_box_resources() {
 		echo '<ul>';
-		_e( sprintf( 'The WordPress documentation has instructions on <a href="%s">how file permissions work</a>, as well as notes on <a href="%s">what permissions WordPress needs</a>.', 'http://codex.wordpress.org/Changing_File_Permissions', 'http://codex.wordpress.org/Changing_File_Permissions#Permission_Scheme_for_WordPress' ), 'upgrade_first_aid' );
+		_e( sprintf( 'The WordPress documentation has instructions on <a href="%s">how file permissions work</a>, as well as notes on <a href="%s">what permissions WordPress needs</a>.', esc_url( 'http://codex.wordpress.org/Changing_File_Permissions' ), esc_url( 'http://codex.wordpress.org/Changing_File_Permissions#Permission_Scheme_for_WordPress' ) ), 'upgrade_first_aid' );
 		echo '</ul>';
 	}
 
