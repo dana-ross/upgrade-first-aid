@@ -92,4 +92,70 @@ class UpgradeFirstAidUtil {
 		return WP_Error( "Unrecognized filesystem method $type" );
 	}
 
+	/**
+	 * wp_get_themes from WordPress 3.8.1 with patch to prevent premature exit
+	 *
+	 * @param array $args
+	 *
+	 * @return array
+	 * @see https://core.trac.wordpress.org/ticket/24639
+	 * @see wp_get_themes()
+	 */
+	public static function alt_wp_get_themes( $args = array() ) {
+
+		global $wp_theme_directories;
+
+		$defaults = array( 'errors' => false, 'allowed' => null, 'blog_id' => 0 );
+		$args     = wp_parse_args( $args, $defaults );
+
+		$theme_directories = search_theme_directories();
+
+		if ( count( $wp_theme_directories ) > 1 ) {
+			// Make sure the current theme wins out, in case search_theme_directories() picks the wrong
+			// one in the case of a conflict. (Normally, last registered theme root wins.)
+			$current_theme = get_stylesheet();
+			if ( isset( $theme_directories[$current_theme] ) ) {
+				$root_of_current_theme = get_raw_theme_root( $current_theme );
+				if ( ! in_array( $root_of_current_theme, $wp_theme_directories ) )
+					$root_of_current_theme = WP_CONTENT_DIR . $root_of_current_theme;
+				$theme_directories[$current_theme]['theme_root'] = $root_of_current_theme;
+			}
+		}
+
+		if ( empty( $theme_directories ) )
+			return array();
+
+		if ( is_multisite() && null !== $args['allowed'] ) {
+			$allowed = $args['allowed'];
+			if ( 'network' === $allowed )
+				$theme_directories = array_intersect_key( $theme_directories, WP_Theme::get_allowed_on_network() );
+			elseif ( 'site' === $allowed )
+				$theme_directories = array_intersect_key( $theme_directories, WP_Theme::get_allowed_on_site( $args['blog_id'] ) );
+			elseif ( $allowed )
+				$theme_directories = array_intersect_key( $theme_directories, WP_Theme::get_allowed( $args['blog_id'] ) );
+			else
+				$theme_directories = array_diff_key( $theme_directories, WP_Theme::get_allowed( $args['blog_id'] ) );
+		}
+
+		$themes = array();
+		static $_themes = array();
+
+		foreach ( $theme_directories as $theme => $theme_root ) {
+			if ( isset( $_themes[$theme_root['theme_root'] . '/' . $theme] ) )
+				$themes[$theme] = $_themes[$theme_root['theme_root'] . '/' . $theme];
+			else
+				$themes[$theme] = $_themes[$theme_root['theme_root'] . '/' . $theme] = new WP_Theme( $theme, $theme_root['theme_root'] );
+		}
+
+		if ( null !== $args['errors'] ) {
+			foreach ( $themes as $theme => $wp_theme ) {
+				if ( $wp_theme->errors() != $args['errors'] )
+					unset( $themes[$theme] );
+			}
+		}
+
+		return $themes;
+
+	}
+
 }

@@ -7,7 +7,8 @@ Description: Troubleshoot issues automatically upgrading WordPress, its themes, 
 Author: David Michael Ross
 Version: 1.0
 Author URI: http://davidmichaelross.com
-License: MIT
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: upgrade_first_aid
 */
 
@@ -90,7 +91,14 @@ class UpgradeFirstAid {
 		self::maybe_ownership_mismatch( get_theme_root() );
 
 		set_error_handler( array( __CLASS__, 'error_handler' ), E_ALL );
-		$all_themes = wp_get_themes();
+		if ( version_compare( '3.7', $GLOBALS['wp_version'], 'ge' ) ) {
+			// wp_get_themes() fixed by nacin https://core.trac.wordpress.org/ticket/24639
+			$all_themes = wp_get_themes();
+		}
+		else {
+			// unpatched wp_get_themes() so a replacement is needed
+			$all_themes = UpgradeFirstAidUtil::alt_wp_get_themes();
+		}
 		restore_error_handler();
 
 		foreach ( $all_themes as $theme_path => $theme_details ) {
