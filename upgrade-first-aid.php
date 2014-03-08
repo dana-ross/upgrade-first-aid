@@ -62,6 +62,7 @@ class UpgradeFirstAid {
 
 		echo '<style>code {white-space: nowrap;}.details{width: 68%;min-width: 300px;float:left;margin-right:2%;}.sidebar{width:29%;min-width:200px;float:left;}</style>';
 		echo '<div class=\"wrap\">';
+
 		screen_icon();
 		echo '<h2>' . __( 'Upgrade First Aid', 'upgrade_first_aid' ) . '</h2>';
 
@@ -120,6 +121,7 @@ class UpgradeFirstAid {
 		echo '<div class="sidebar">';
 		do_meta_boxes( 'upgrade_first_aid', 'normal', '' );
 		echo '</div>';
+		
 		echo '</div>';
 	}
 
