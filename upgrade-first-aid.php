@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: upgrade_first_aid
 */
 
-require_once ABSPATH . 'wp-admin/includes/file.php';
+require_once trailingslashit( ABSPATH ) . 'wp-admin/includes/file.php';
 require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/class-ufa-admin-notifier.php';
 require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/class-upgrade-first-aid-util.inc';
 require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/class-upgrade-first-aid.php';
