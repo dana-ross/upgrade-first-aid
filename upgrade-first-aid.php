@@ -3,7 +3,7 @@
 /*
 Plugin Name: Upgrade First Aid
 Plugin URI: https://github.com/daveross/upgrade-first-aid
-Description: Troubleshoot automatic upgrade issues
+Description: Troubleshoot issues automatically upgrading WordPress, its themes, and its plugins.
 Author: David Michael Ross
 Version: 1.0
 Author URI: http://davidmichaelross.com
