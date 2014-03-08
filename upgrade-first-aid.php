@@ -14,7 +14,7 @@ Text Domain: upgrade_first_aid
 
 require_once ABSPATH . 'wp-admin/includes/file.php';
 require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/class-ufa-admin-notifier.php';
-require_once dirname( __FILE__ ) . '/UpgradeFirstAidUtil.inc';
+require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/class-upgrade-first-aid-util.inc';
 define( 'UPGRADE_FIRST_AID_DISK_FREE_THRESHOLD', 1024 * 10 );
 
 add_action( 'admin_menu', array( 'UpgradeFirstAid', 'admin_menu' ) );
@@ -121,7 +121,7 @@ class UpgradeFirstAid {
 		echo '<div class="sidebar">';
 		do_meta_boxes( 'upgrade_first_aid', 'normal', '' );
 		echo '</div>';
-		
+
 		echo '</div>';
 	}
 
