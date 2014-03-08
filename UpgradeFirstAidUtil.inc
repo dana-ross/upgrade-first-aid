@@ -158,4 +158,15 @@ class UpgradeFirstAidUtil {
 
 	}
 
+	/**
+	 * Check if PHP is running on a Windows server
+	 *
+	 * @return bool
+	 * @see http://stackoverflow.com/questions/738823/possible-values-for-php-os
+	 */
+	public static function is_windows() {
+		// Detects "WIN32", "WINNT", and "Windows"
+		return ( strtoupper( substr( PHP_OS, 0, 3 ) ) === 'WIN' );
+	}
+
 }

@@ -13,6 +13,7 @@ Text Domain: upgrade_first_aid
 */
 
 require_once ABSPATH . 'wp-admin/includes/file.php';
+require_once trailingslashit( dirname( __FILE__ ) ) . 'inc/class-ufa-admin-notifier.php';
 require_once dirname( __FILE__ ) . '/UpgradeFirstAidUtil.inc';
 define( 'UPGRADE_FIRST_AID_DISK_FREE_THRESHOLD', 1024 * 10 );
 
@@ -32,6 +33,11 @@ class UpgradeFirstAid {
 	public static function admin_init() {
 		load_plugin_textdomain( 'upgrade_first_aid', false, dirname( plugin_basename( __FILE__ ) ) . "/lang/" );
 		add_meta_box( 'upgrade_first_aid_resources', __( 'Resources', 'upgrade_first_aid' ), array( 'UpgradeFirstAid', 'meta_box_resources' ), 'upgrade_first_aid', 'normal', 'high' );
+
+		// Display a warning on Windows servers
+		if ( UpgradeFirstAidUtil::is_windows() ) {
+			UFAAdminNotifier::error( sprintf( __( 'This plugin hasn\'t been tested on Windows servers. For helpful information on running WordPress on IIS, see <a href="%s">%s</a>', 'upgrade-first-aid' ), esc_url( 'http://codex.wordpress.org/Installing_on_Microsoft_IIS' ), 'http://codex.wordpress.org/Installing_on_Microsoft_IIS' ) );
+		}
 	}
 
 	public static function admin_enqueue_scripts() {
