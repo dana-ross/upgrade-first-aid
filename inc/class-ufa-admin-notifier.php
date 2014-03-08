@@ -106,13 +106,13 @@ class UFAAdminNotifier {
 
 		foreach ( $this->admin_errors as $message ) {
 			echo '<div class="error"><p>';
-			echo $message;
+			echo wp_kses( $message, array() );
 			echo '</p></div>';
 		}
 
 		foreach ( $this->admin_messages as $message ) {
 			echo '<div class="updated"><p>';
-			echo $message;
+			echo wp_kses( $message, array() );
 			echo '</p></div>';
 		}
 

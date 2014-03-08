@@ -27,11 +27,11 @@ add_action( 'admin_enqueue_scripts', array( 'UpgradeFirstAid', 'admin_enqueue_sc
 class UpgradeFirstAid {
 
 	public static function admin_menu() {
-		add_management_page( "Upgrade First Aid", __( 'Upgrade First Aid', 'upgrade_first_aid' ), 'manage_options', __FILE__, array( 'UpgradeFirstAid', 'plugin_options' ) );
+		add_management_page( 'Upgrade First Aid', __( 'Upgrade First Aid', 'upgrade_first_aid' ), 'manage_options', __FILE__, array( 'UpgradeFirstAid', 'plugin_options' ) );
 	}
 
 	public static function admin_init() {
-		load_plugin_textdomain( 'upgrade_first_aid', false, dirname( plugin_basename( __FILE__ ) ) . "/lang/" );
+		load_plugin_textdomain( 'upgrade_first_aid', false, trailingslashit( dirname( plugin_basename( __FILE__ ) ) ) . '/lang/' );
 		add_meta_box( 'upgrade_first_aid_resources', __( 'Resources', 'upgrade_first_aid' ), array( 'UpgradeFirstAid', 'meta_box_resources' ), 'upgrade_first_aid', 'normal', 'high' );
 
 		// Display a warning on Windows servers
@@ -61,7 +61,7 @@ class UpgradeFirstAid {
 		$screen = get_current_screen();
 
 		echo '<style>code {white-space: nowrap;}.details{width: 68%;min-width: 300px;float:left;margin-right:2%;}.sidebar{width:29%;min-width:200px;float:left;}</style>';
-		echo "<div class=\"wrap\">";
+		echo '<div class=\"wrap\">';
 		screen_icon();
 		echo '<h2>' . __( 'Upgrade First Aid', 'upgrade_first_aid' ) . '</h2>';
 
@@ -118,7 +118,7 @@ class UpgradeFirstAid {
 		echo '</div>';
 
 		echo '<div class="sidebar">';
-		do_meta_boxes( 'upgrade_first_aid', 'normal', new stdClass() );
+		do_meta_boxes( 'upgrade_first_aid', 'normal', '' );
 		echo '</div>';
 		echo '</div>';
 	}
@@ -130,7 +130,7 @@ class UpgradeFirstAid {
 	 *
 	 * @param string $context directory whose permissions should be checked
 	 */
-	private static function maybe_ownership_mismatch( $context, $item = "WordPress" ) {
+	private static function maybe_ownership_mismatch( $context, $item = 'WordPress' ) {
 		$php_user             = UpgradeFirstAidUtil::current_php_user();
 		$wp_filesystem_direct = new WP_Filesystem_Direct( null );
 		$wp_owner             = $wp_filesystem_direct->owner( $context );
@@ -145,7 +145,7 @@ class UpgradeFirstAid {
 		if ( $php_user !== $wp_owner ) {
 			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "PHP is currently running as the user <em>%s</em>, but the %s files are owned by the user <em>%s</em>. WordPress could install upgrades without FTP if you changed the files' owner to <em>%s</em>.", 'upgrade_first_aid' ), $php_user, $item, $wp_owner, $php_user ) . '</p>';
 			if ( UpgradeFirstAidUtil::can_write_to_directory( $directory ) && ! defined( 'FS_METHOD' ) ) {
-				echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/comment-grey-bubble.png' ) ) . sprintf( __( "<em>%s</em> can write to the %s directory, so you can try adding <code>%s</code> to your wp-config.php file which might allow upgrades without FTP.", 'upgrade_first_aid' ), $php_user, $directory, "define('FS_METHOD', 'direct');" ) . '</p>';
+				echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/comment-grey-bubble.png' ) ) . sprintf( __( '<em>%s</em> can write to the %s directory, so you can try adding <code>%s</code> to your wp-config.php file which might allow upgrades without FTP.', 'upgrade_first_aid' ), $php_user, $directory, "define('FS_METHOD', 'direct');" ) . '</p>';
 			}
 		}
 	}
@@ -160,7 +160,7 @@ class UpgradeFirstAid {
 	private static function maybe_disk_full( $context ) {
 		$free_space = disk_free_space( $context );
 		if ( UPGRADE_FIRST_AID_DISK_FREE_THRESHOLD >= $free_space ) {
-			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( "The disk or partition where %s is located is dangerously low on free space.", 'upgrade_first_aid' ), $context ) . '</p>';
+			echo '<p>' . UpgradeFirstAidUtil::img_tag( admin_url( 'images/no.png' ) ) . sprintf( __( 'The disk or partition where %s is located is dangerously low on free space.', 'upgrade_first_aid' ), $context ) . '</p>';
 		}
 	}
 
@@ -171,8 +171,11 @@ class UpgradeFirstAid {
 	}
 
 	public static function error_handler( $errno, $errstr, $errfile, $errline, $errcontext ) {
-		print "$errno $errstr $errfile $errline";
-		print "<hr>";
-		print_r( $errcontext );
+
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			print wp_kses( "$errno $errstr $errfile $errline", array() );
+			print '<hr>';
+		}
+
 	}
 }
